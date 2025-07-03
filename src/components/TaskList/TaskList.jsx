@@ -5,7 +5,7 @@ import CompleteTask from "./CompleteTask";
 import FailedTask from "./FailedTask";
 
 const TaskList = ({ data }) => {
-  // console.log(data);
+  console.log(data);
   return (
     <div
       id="tasklist"
@@ -15,7 +15,7 @@ const TaskList = ({ data }) => {
         if (elem.active) {
           return <AcceptTask key={id} data={elem} />;
         }
-        if (elem.NewTask) {
+        if (elem.newTask) {
           return <NewTask key={id} data={elem} />;
         }
         if (elem.completed) {

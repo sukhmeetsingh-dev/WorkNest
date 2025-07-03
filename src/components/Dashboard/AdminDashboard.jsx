@@ -4,6 +4,7 @@ import CreateTask from "../other/CreateTask";
 import AllTask from "../other/AllTask";
 
 const AdminDashboard = (props) => {
+  console.log(props.changeUser);
   return (
     <div className="h-screen w-full p-10">
       <Header changeUser={props.changeUser} />
