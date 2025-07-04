@@ -1,12 +1,13 @@
 import { useState } from "react";
 import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
+import { faMoon, faSun, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 const Login = ({ handleLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [darkMode, setDarkMode] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -40,14 +41,23 @@ const Login = ({ handleLogin }) => {
               type="email"
               placeholder="Enter your email"
             />
-            <input
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className={`w-72 outline-none border-2 text-xl py-3 px-5 rounded-full mb-4 placeholder-gray-400 transition-colors duration-300 ${darkMode ? 'bg-transparent border-emerald-600 text-white' : 'bg-gray-100 border-blue-900 text-black'}`}
-              type="password"
-              placeholder="Enter your password"
-            />
+            <div className="relative w-72 mb-4">
+              <input
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className={`w-full outline-none border-2 text-xl py-3 px-5 rounded-full placeholder-gray-400 pr-12 transition-colors duration-300 ${darkMode ? 'bg-transparent border-emerald-600 text-white' : 'bg-gray-100 border-blue-900 text-black'}`}
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-xl text-gray-500"
+              >
+                <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+              </button>
+            </div>
             <button
               className={`mt-3 w-full text-white font-semibold text-xl py-3 rounded-full transition-colors duration-300 ${darkMode ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-blue-500 hover:bg-blue-600'}`}
             >
