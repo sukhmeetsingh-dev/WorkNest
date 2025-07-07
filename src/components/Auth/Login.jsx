@@ -1,12 +1,14 @@
-import { useState } from "react";
-import React from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMoon, faSun, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+// src/pages/Login.jsx
+import React, { useState, useContext } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import {ThemeContext} from "../../context/ThemeContext";
+import ThemeToggle from "../ThemeToggle";
 
 const Login = ({ handleLogin }) => {
+  const { darkMode } = useContext(ThemeContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [darkMode, setDarkMode] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
 
   const submitHandler = (e) => {
@@ -17,27 +19,39 @@ const Login = ({ handleLogin }) => {
   };
 
   return (
-    <div className={`h-screen w-screen overflow-hidden transition-colors duration-300 ${darkMode ? 'bg-zinc-900 text-white' : 'bg-gray-100 text-black'}`}>
-      {/* Navbar */}
-      <nav className="flex justify-end items-center p-4">
-        <button
-          onClick={() => setDarkMode(!darkMode)}
-          className={`text-xl p-2 rounded-full transition-colors duration-300 ${darkMode ? 'bg-yellow-300 text-yellow-600' : 'bg-black text-white'}`}
-        >
-          {darkMode ? <FontAwesomeIcon icon={faSun} className="text-yellow-500" /> : <FontAwesomeIcon icon={faMoon} />}
-        </button>
+    <div
+      className={`h-screen w-screen overflow-hidden ${
+        darkMode ? "bg-zinc-900 text-white" : "bg-gray-100 text-black"
+      }`}
+    >
+      <nav className="flex justify-end p-4">
+        <ThemeToggle />
       </nav>
 
-      {/* Page Content */}
       <div className="flex flex-col items-center justify-center h-[calc(100%-64px)]">
-        <h1 className={`text-3xl font-bold mb-6 tracking-wide ${darkMode ? 'text-white' : 'text-red-900'}`}>WORKNEST</h1>
-        <div className={`p-10 rounded-xl shadow-lg transition-colors duration-300 ${darkMode ? 'bg-zinc-800' : 'bg-gray-300'}`}>
+        <h1
+          className={`text-3xl font-bold mb-6 tracking-wide ${
+            darkMode ? "text-white" : "text-red-900"
+          }`}
+        >
+          WORKNEST
+        </h1>
+
+        <div
+          className={`p-10 rounded-xl shadow-lg ${
+            darkMode ? "bg-zinc-800" : "bg-gray-300"
+          }`}
+        >
           <form onSubmit={submitHandler} className="flex flex-col items-center">
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className={`w-72 outline-none border-2 text-xl py-3 px-5 rounded-full mb-4 placeholder-gray-400 transition-colors duration-300 ${darkMode ? 'bg-transparent border-emerald-600 text-white' : 'bg-gray-100 border-blue-900 text-black'}`}
+              className={`w-72 border-2 text-xl py-3 px-5 rounded-full mb-4 ${
+                darkMode
+                  ? "bg-transparent border-emerald-600 text-white"
+                  : "bg-gray-100 border-blue-900 text-black"
+              }`}
               type="email"
               placeholder="Enter your email"
             />
@@ -46,7 +60,11 @@ const Login = ({ handleLogin }) => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className={`w-full outline-none border-2 text-xl py-3 px-5 rounded-full placeholder-gray-400 pr-12 transition-colors duration-300 ${darkMode ? 'bg-transparent border-emerald-600 text-white' : 'bg-gray-100 border-blue-900 text-black'}`}
+                className={`w-full border-2 text-xl py-3 px-5 rounded-full pr-12 ${
+                  darkMode
+                    ? "bg-transparent border-emerald-600 text-white"
+                    : "bg-gray-100 border-blue-900 text-black"
+                }`}
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
               />
@@ -59,7 +77,11 @@ const Login = ({ handleLogin }) => {
               </button>
             </div>
             <button
-              className={`mt-3 w-full text-white font-semibold text-xl py-3 rounded-full transition-colors duration-300 ${darkMode ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-blue-500 hover:bg-blue-600'}`}
+              className={`mt-3 w-full text-white font-semibold text-xl py-3 rounded-full ${
+                darkMode
+                  ? "bg-emerald-600 hover:bg-emerald-700"
+                  : "bg-blue-500 hover:bg-blue-600"
+              }`}
             >
               Login
             </button>

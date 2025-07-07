@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import { AuthContext } from "../../context/AuthProvider";
 
 const CreateTask = () => {
@@ -11,20 +11,20 @@ const CreateTask = () => {
   const [category, setCategory] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [highlightIndex, setHighlightIndex] = useState(-1);
+  const [error, setError] = useState("");
 
-  const assignRef = useRef();
+  const dropdownRef = useRef();
 
+  // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (assignRef.current && !assignRef.current.contains(e.target)) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setFilteredUsers([]);
         setHighlightIndex(-1);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleAssignChange = (e) => {
@@ -35,29 +35,35 @@ const CreateTask = () => {
       .filter((name) => name.toLowerCase().includes(value.toLowerCase()));
     setFilteredUsers(suggestions);
     setHighlightIndex(-1);
+    setError("");
   };
 
-  const handleAssignKeyDown = (e) => {
+  const handleKeyDown = (e) => {
     if (filteredUsers.length > 0) {
       if (e.key === "ArrowDown") {
         e.preventDefault();
-        setHighlightIndex((prev) => (prev + 1) % filteredUsers.length);
+        setHighlightIndex((prev) =>
+          prev < filteredUsers.length - 1 ? prev + 1 : 0
+        );
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
-        setHighlightIndex((prev) => (prev - 1 + filteredUsers.length) % filteredUsers.length);
+        setHighlightIndex((prev) =>
+          prev > 0 ? prev - 1 : filteredUsers.length - 1
+        );
       } else if (e.key === "Enter") {
         e.preventDefault();
         if (highlightIndex >= 0) {
           selectUser(filteredUsers[highlightIndex]);
-        } else if (!userData.some(user => user.firstName.toLowerCase() === assignTo.toLowerCase())) {
-          setAssignTo("");
+        } else {
+          const match = userData.find(
+            (u) => u.firstName.toLowerCase() === assignTo.toLowerCase()
+          );
+          if (!match) {
+            setError("Please select a valid employee name from the list.");
+            return;
+          }
+          setFilteredUsers([]);
         }
-        setFilteredUsers([]);
-        setHighlightIndex(-1);
-      }
-    } else if (e.key === "Enter") {
-      if (!userData.some(user => user.firstName.toLowerCase() === assignTo.toLowerCase())) {
-        setAssignTo("");
       }
     }
   };
@@ -66,12 +72,20 @@ const CreateTask = () => {
     setAssignTo(name);
     setFilteredUsers([]);
     setHighlightIndex(-1);
+    setError("");
   };
 
   const submitHandler = (e) => {
     e.preventDefault();
 
-    if (!assignTo) return;
+    const matchedUser = userData.find(
+      (u) => u.firstName.toLowerCase() === assignTo.toLowerCase()
+    );
+
+    if (!matchedUser) {
+      setError("Please select a valid employee name from the list.");
+      return;
+    }
 
     const newTask = {
       title: taskTitle,
@@ -84,16 +98,21 @@ const CreateTask = () => {
       completed: false,
     };
 
-    const data = userData;
-
-    data.forEach(function (elem) {
-      if (assignTo.toLowerCase() === elem.firstName.toLowerCase()) {
-        elem.tasks.push(newTask);
-        elem.taskNumbers.newTask = elem.taskNumbers.newTask + 1;
+    const updatedData = userData.map((user) => {
+      if (user.firstName.toLowerCase() === assignTo.toLowerCase()) {
+        return {
+          ...user,
+          tasks: [...user.tasks, newTask],
+          taskNumbers: {
+            ...user.taskNumbers,
+            newTask: user.taskNumbers.newTask + 1,
+          },
+        };
       }
+      return user;
     });
-    setUserData(data);
 
+    setUserData(updatedData);
     setTaskDate("");
     setAssignTo("");
     setCategory("");
@@ -101,6 +120,7 @@ const CreateTask = () => {
     setTaskTitle("");
     setFilteredUsers([]);
     setHighlightIndex(-1);
+    setError("");
   };
 
   return (
@@ -129,12 +149,12 @@ const CreateTask = () => {
               type="date"
             />
           </div>
-          <div className="relative" ref={assignRef}>
+          <div className="relative" ref={dropdownRef}>
             <h3 className="text-sm text-gray-300 mb-0.5">Assign to</h3>
             <input
               value={assignTo}
               onChange={handleAssignChange}
-              onKeyDown={handleAssignKeyDown}
+              onKeyDown={handleKeyDown}
               className="text-sm text-white py-1 px-2 w-4/5 rounded outline-none bg-transparent border-[1px] border-gray-400 mb-1"
               type="text"
               placeholder="Employee name"
@@ -146,12 +166,19 @@ const CreateTask = () => {
                   <li
                     key={idx}
                     onClick={() => selectUser(name)}
-                    className={`px-3 py-1 cursor-pointer hover:bg-emerald-200 ${idx === highlightIndex ? 'bg-emerald-100' : ''}`}
+                    className={`px-3 py-1 cursor-pointer ${
+                      highlightIndex === idx
+                        ? "bg-emerald-300"
+                        : "hover:bg-emerald-200"
+                    }`}
                   >
                     {name}
                   </li>
                 ))}
               </ul>
+            )}
+            {error && (
+              <p className="text-red-500 text-xs mt-1">{error}</p>
             )}
           </div>
           <div>

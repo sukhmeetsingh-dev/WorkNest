@@ -1,19 +1,26 @@
-import React, {useState} from 'react'
-import { setLocalStorage } from '../../utils/localStorage'
+import React, { useContext } from "react";
+import { ThemeContext } from "../../context/ThemeContext";
+import ThemeToggle from "../ThemeToggle";
 
-const Header = ({changeUser, data}) => {
+const Header = ({ changeUser }) => {
+  const { darkMode } = useContext(ThemeContext);
 
   const logOutUser = () => {
-    localStorage.setItem('loggedInUser','')
-    changeUser('')
-  }
+    localStorage.setItem("loggedInUser", "");
+    changeUser("");
+  };
 
   return (
-    <div className='flex items-end justify-between'>
-      <h1 className='text-2xl font-medium text-white'>Hello <br /> <span className='text-3xl font-semibold text-white'>{data?.firstName??"Admin"}👋🏻</span></h1>
-      <button onClick={logOutUser} className='bg-red-500 text-lg font-medium text-white px-5 py-2 rounded-sm'>Log Out</button>
+    <div className="flex items-center space-x-4">
+      <ThemeToggle />
+      <button
+        onClick={logOutUser}
+        className="bg-red-500 text-lg font-medium text-white px-5 py-2 rounded-sm"
+      >
+        Log Out
+      </button>
     </div>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;
