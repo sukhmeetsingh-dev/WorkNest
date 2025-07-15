@@ -4,7 +4,6 @@ import EmployeeDashboard from "./components/Dashboard/EmployeeDashboard";
 import AdminDashboard from "./components/Dashboard/AdminDashboard";
 import { getLocalStorage } from "./utils/localStorage";
 import { AuthContext } from "./context/AuthProvider";
-import { ThemeProvider } from "./context/ThemeContext";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -46,7 +45,7 @@ const App = () => {
   };
 
   return (
-    <ThemeProvider>
+    <>
       {!user ? (
         <Login handleLogin={handleLogin} />
       ) : user === "admin" ? (
@@ -54,7 +53,7 @@ const App = () => {
       ) : user === "employee" ? (
         <EmployeeDashboard changeUser={setUser} data={loggedInUserData} />
       ) : null}
-    </ThemeProvider>
+    </>
   );
 };
 

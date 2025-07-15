@@ -124,38 +124,38 @@ const CreateTask = () => {
   };
 
   return (
-    <div className="p-5 bg-[#1C1C1C] mt-5 rounded">
+    <div className="p-5 bg-gray-300 text-black mt-5 rounded" >
       <form
         onSubmit={submitHandler}
         className="flex flex-wrap w-full items-start justify-between"
       >
         <div className="w-1/2">
           <div>
-            <h3 className="text-sm text-gray-300 mb-0.5">Task Title</h3>
+            <h3 className="text-sm text-black mb-0.5">Task Title</h3>
             <input
               value={taskTitle}
               onChange={(e) => setTaskTitle(e.target.value)}
-              className="text-sm text-white py-1 px-2 w-4/5 rounded outline-none bg-transparent border-[1px] border-gray-400 mb-4"
+              className="text-sm text-black py-1 px-2 w-4/5 rounded outline-none bg-transparent border-[1px] border-gray-400 mb-4"
               type="text"
               placeholder="Make a UI design"
             />
           </div>
           <div>
-            <h3 className="text-sm text-gray-300 mb-0.5">Date</h3>
+            <h3 className="text-sm text-black mb-0.5">Date</h3>
             <input
               value={taskDate}
               onChange={(e) => setTaskDate(e.target.value)}
-              className="text-sm text-white py-1 px-2 w-4/5 rounded outline-none bg-transparent border-[1px] border-gray-400 mb-4"
+              className="text-sm text-black py-1 px-2 w-4/5 rounded outline-none bg-transparent border-[1px] border-gray-400 mb-4"
               type="date"
             />
           </div>
           <div className="relative" ref={dropdownRef}>
-            <h3 className="text-sm text-gray-300 mb-0.5">Assign to</h3>
+            <h3 className="text-sm text-black mb-0.5">Assign to</h3>
             <input
               value={assignTo}
               onChange={handleAssignChange}
               onKeyDown={handleKeyDown}
-              className="text-sm text-white py-1 px-2 w-4/5 rounded outline-none bg-transparent border-[1px] border-gray-400 mb-1"
+              className="text-sm text-black py-1 px-2 w-4/5 rounded outline-none bg-transparent border-[1px] border-gray-400 mb-1"
               type="text"
               placeholder="Employee name"
               autoComplete="off"
@@ -168,8 +168,8 @@ const CreateTask = () => {
                     onClick={() => selectUser(name)}
                     className={`px-3 py-1 cursor-pointer ${
                       highlightIndex === idx
-                        ? "bg-emerald-300"
-                        : "hover:bg-emerald-200"
+                        ? "bg-blue-500"
+                        : "hover:bg-blue-400"
                     }`}
                   >
                     {name}
@@ -182,25 +182,25 @@ const CreateTask = () => {
             )}
           </div>
           <div>
-            <h3 className="text-sm text-gray-300 mb-0.5">Category</h3>
+            <h3 className="text-sm text-black mb-0.5">Category</h3>
             <input
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="text-sm text-white py-1 px-2 w-4/5 rounded outline-none bg-transparent border-[1px] border-gray-400 mb-4"
+              className="text-sm text-black py-1 px-2 w-4/5 rounded outline-none bg-transparent border-[1px] border-gray-400 mb-4"
               type="text"
-              placeholder="Design, dev, etc"
+              placeholder="Design, Development, etc."
             />
           </div>
         </div>
 
         <div className="w-2/5 flex flex-col items-start">
-          <h3 className="text-sm text-gray-300 mb-0.5">Description</h3>
+          <h3 className="text-sm text-black mb-0.5">Description</h3>
           <textarea
             value={taskDescription}
             onChange={(e) => setTaskDescription(e.target.value)}
-            className="w-full h-44 text-sm text-white py-2 px-4 rounded outline-none bg-transparent border-[1px] border-gray-400 mb-4"
+            className="w-full h-44 text-sm text-black py-2 px-4 rounded outline-none bg-transparent border-[1px] border-gray-400 mb-4"
           ></textarea>
-          <button className="bg-emerald-500 py-3 hover:bg-emerald-600 px-5 rounded text-sm mt-4 w-full">
+          <button className=" text-white bg-blue-900 py-3 hover:bg-blue-600 px-5 rounded text-sm mt-4 w-full">
             Create Task
           </button>
         </div>
