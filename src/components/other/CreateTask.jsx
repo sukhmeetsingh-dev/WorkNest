@@ -113,6 +113,7 @@ const CreateTask = () => {
     });
 
     setUserData(updatedData);
+    localStorage.setItem("employees", JSON.stringify(updatedData));
     setTaskDate("");
     setAssignTo("");
     setCategory("");
