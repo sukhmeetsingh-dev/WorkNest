@@ -1,12 +1,66 @@
 # React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+WorkNest – Local Setup & Usage Guide
 
-Currently, two official plugins are available:
+WorkNest is a team task management app where managers can assign tasks to employees, and employees can view their assigned tasks in an intuitive dashboard.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Follow these steps to set up and run the WorkNest project on your local machine.
+
+---
+
+### **Step 1 – Open the Project**
+- Open the project folder in **Visual Studio Code**.
+
+---
+
+### **Step 2 – Start the Development Server**
+- Open the integrated terminal in VS Code.
+- Run the following command:
+
+  npm run dev
+
+Copy the generated localhost link from the terminal and paste it into your browser,
+or simply Ctrl + Click the link in the terminal to open it.
+
+Step 3 – Login as Manager/Admin
+Email: admin@me.com
+
+Password: 123
+
+Step 4 – Login as Employee
+Email: employee1@example.com
+
+Password: 123
+
+Step 5 – View Other Employee Dashboards
+The local database contains five employees.
+
+To view another employee’s dashboard, change the number in the email:
+
+employee2@example.com
+
+employee3@example.com
+
+employee4@example.com
+
+employee5@example.com
+
+Step 6 – Prerequisites
+
+Ensure Node.js is installed on your system.
+Download from: https://nodejs.org
+
+Step 7 – Troubleshooting
+If you encounter errors or difficulties running the project,
+refer to the online hosted link: https://work-nest-nine.vercel.app/
+
+Tech Stack
+Frontend: React.js, Tailwind CSS
+
+Backend: Local JSON (Simulated Database)
+
+Tools: Vite, Node.js
