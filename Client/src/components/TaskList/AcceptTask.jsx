@@ -1,22 +1,40 @@
 import React from "react";
 
-const AcceptTask = ({data}) => {
-  return (
-    <div className="flex-shrink-0 h-full w-[300px] p-5 bg-[#3F7CCD] rounded-xl">
-      <div className="flex justify-between items-center">
-        <h3 className="bg-red-400 text-sm px-3 py-1 rounded">{data.category}</h3>
-        <h4>{data.date}</h4>
-      </div>
-      <h2 className="mt-5 text-2xl font-semibold">{data.title}</h2>
-      <p className="text-sm mt-2">{data.description}</p>
-      <div className="flex justify-between mt-4">
-        <button className="bg-green-500 py-1 px-2 text-sm">
-          Mark as Completed
-        </button>
-        <button className="bg-red-500 py-1 px-2 text-sm">Mark as Failed</button>
-      </div>
-    </div>
-  );
-};
+const AcceptTask = ({ tasks, onStatusChange }) => (
+  <div>
+    <h2 className="text-2xl font-semibold mb-3">🟡 Accepted Tasks</h2>
+    {tasks.length === 0 ? (
+      <p>No accepted tasks</p>
+    ) : (
+      <ul className="space-y-2">
+        {tasks.map((task) => (
+          <li
+            key={task._id}
+            className="p-4 bg-white rounded-lg shadow flex justify-between items-center"
+          >
+            <div>
+              <h3 className="font-bold">{task.title}</h3>
+              <p>{task.description}</p>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => onStatusChange(task._id, "completed")}
+                className="bg-blue-500 text-white px-3 py-1 rounded"
+              >
+                Mark Completed
+              </button>
+              <button
+                onClick={() => onStatusChange(task._id, "failed")}
+                className="bg-red-500 text-white px-3 py-1 rounded"
+              >
+                Mark Failed
+              </button>
+            </div>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+);
 
 export default AcceptTask;

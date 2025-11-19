@@ -1,34 +1,50 @@
-import React from "react";
-import NewTask from "../Img/NewTask.png";
-import TaskAccept from "../Img/TaskAccept.png";
-import TaskCompleted from "../Img/TaskCompleted.png";
-import TaskFailed from "../Img/TaskFailed.png";
+import React, { useEffect, useState } from "react";
 
-const TaskListNumbers = ({ data }) => {
+const TaskListNumber = ({ tasks = [] }) => {
+  const [counts, setCounts] = useState({
+    total: 0,
+    completed: 0,
+    failed: 0,
+    working: 0,
+  });
+
+  useEffect(() => {
+    if (tasks.length) {
+      const completed = tasks.filter((t) => t.status === "completed").length;
+      const failed = tasks.filter((t) => t.status === "failed").length;
+      const working = tasks.filter(
+        (t) => t.status === "new" || t.status === "accepted"
+      ).length;
+
+      setCounts({
+        total: tasks.length,
+        completed,
+        failed,
+        working,
+      });
+    }
+  }, [tasks]);
+
   return (
-    <div className="flex mt-10 justify-between gap-5 screen">
-      <div className="flex items-center space-x-2 mt-2 ml-2 rounded-xl w-[45%] h-[45%] py-6 px-9 bg-[#8AB2E5]">
-        <h2 className="text-3xl font-semibold">{data.taskNumbers.newTask}</h2>
-        <h2 className="text-xl font-medium">&nbsp;New Task</h2>
-        <img src={NewTask} className="w-16 h-16 float-right ml-2" alt="New Task Icon" />
+    <div className="flex gap-6 justify-center">
+      <div className="bg-blue-100 px-6 py-3 rounded-lg shadow text-center">
+        <p className="font-bold text-blue-700">Total</p>
+        <p className="text-2xl">{counts.total}</p>
       </div>
-      <div className="flex items-center space-x-2 mt-2 ml-2 rounded-xl w-[45%] h-[45%] py-6 px-9 bg-[#8AB2E5]">
-        <h2 className="text-3xl font-semibold">{data.taskNumbers.completed}</h2>
-        <h3 className="text-xl font-medium">Completed Task</h3>
-        <img src={TaskCompleted} className="w-16 h-16 float-right ml-2" alt="Completed Task Icon" />
+      <div className="bg-green-100 px-6 py-3 rounded-lg shadow text-center">
+        <p className="font-bold text-green-700">Completed</p>
+        <p className="text-2xl">{counts.completed}</p>
       </div>
-      <div className="flex items-center space-x-2 mt-2 ml-2 rounded-xl w-[45%] h-[45%] py-6 px-9 bg-[#8AB2E5]">
-        <h2 className="text-3xl font-semibold">{data.taskNumbers.active}</h2>
-        <h3 className="text-xl font-medium">Accepted Task</h3>
-        <img src={TaskAccept} className="w-16 h-16 float-right ml-2" alt="Accepted Task Icon" />
+      <div className="bg-yellow-100 px-6 py-3 rounded-lg shadow text-center">
+        <p className="font-bold text-yellow-700">Working</p>
+        <p className="text-2xl">{counts.working}</p>
       </div>
-      <div className="flex items-center space-x-2 mt-2 ml-2 rounded-xl w-[45%] h-[45%] py-6 px-9 bg-[#8AB2E5]">
-        <h2 className="text-3xl font-semibold">{data.taskNumbers.failed}</h2>
-        <h3 className="text-xl font-medium">Failed Task</h3>
-        <img src={TaskFailed} className="w-16 h-16 float-right ml-2" alt="Failed Task Icon" />
+      <div className="bg-red-100 px-6 py-3 rounded-lg shadow text-center">
+        <p className="font-bold text-red-700">Failed</p>
+        <p className="text-2xl">{counts.failed}</p>
       </div>
     </div>
   );
 };
 
-export default TaskListNumbers;
+export default TaskListNumber;

@@ -1,19 +1,26 @@
 import React from "react";
 
-const CompleteTask = ({data}) => {
-  return (
-    <div className="flex-shrink-0 h-full w-[300px] p-5 bg-[#3F7CCD] rounded-xl">
-      <div className="flex justify-between items-center">
-        <h3 className="bg-red-600 text-sm px-3 py-1 rounded">{data.cateogry}</h3>
-        <h4>{data.date}</h4>
-      </div>
-      <h2 className="mt-5 text-2xl font-semibold">{data.title}</h2>
-      <p className="text-sm mt-2">{data.description}</p>
-      <div className="mt-2">
-        <button className="w-full">Completed</button>
-      </div>
-    </div>
-  );
-};
+const CompleteTask = ({ tasks }) => (
+  <div>
+    <h2 className="text-2xl font-semibold mb-3">✅ Completed Tasks</h2>
+    {tasks.length === 0 ? (
+      <p>No completed tasks</p>
+    ) : (
+      <ul className="space-y-2">
+        {tasks.map((task) => (
+          <li
+            key={task._id}
+            className="p-4 bg-green-100 rounded-lg shadow flex justify-between items-center"
+          >
+            <div>
+              <h3 className="font-bold">{task.title}</h3>
+              <p>{task.description}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+);
 
 export default CompleteTask;
