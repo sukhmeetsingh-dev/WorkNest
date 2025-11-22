@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "https://worknest-backend-917c.onrender.com/api", 
+  baseURL: "https://worknest-backend-917c.onrender.com", 
   headers: { "Content-Type": "application/json" },
 });
 
