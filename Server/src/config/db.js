@@ -2,11 +2,11 @@ import mongoose from "mongoose";
 
 const connectDB = async () => {
   try {
-    const uri = process.env.ATLASDB_URI;
+    const url = process.env.ATLASDB_URL;
 
-    console.log("🔌 Attempting DB connection to:", uri);
+    console.log("🔌 Attempting DB connection to:", url);
 
-    const conn = await mongoose.connect(uri);
+    const conn = await mongoose.connect(url);
 
     console.log("🟢 MongoDB Connected Successfully");
     console.log("📌 Connected DB Name:", conn.connection.name);
