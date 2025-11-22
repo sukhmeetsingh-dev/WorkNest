@@ -41,7 +41,7 @@ app.use(
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5173;
 
 connectDB(process.env.ATLASDB_URL)
   .then(() => {
