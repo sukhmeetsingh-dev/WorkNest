@@ -43,7 +43,7 @@ app.use("/api/tasks", taskRoutes);
 
 const PORT = process.env.PORT || 5000;
 
-connectDB(process.env.MONGO_URI)
+connectDB(process.env.ATLASDB_URL)
   .then(() => {
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
