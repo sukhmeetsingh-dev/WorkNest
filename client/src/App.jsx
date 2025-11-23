@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-import Login from "../src/components/Auth/Login"
+import Login from "../src/components/Auth/Login";
 import AdminDashboard from "./components/Dashboard/AdminDashboard";
 import EmployeeDashboard from "./components/Dashboard/EmployeeDashboard";
 import CreateEmployee from "./components/Dashboard/CreateEmployee";
@@ -38,7 +38,10 @@ const App = () => {
   // ✔ Login handler
   const handleLogin = async (email, password) => {
     try {
-      const res = await axiosInstance.post("api/auth/login", { email, password });
+      const res = await axiosInstance.post("/api/auth/login", {
+        email,
+        password,
+      });
 
       if (res.data.token) {
         localStorage.setItem("token", res.data.token);
@@ -64,15 +67,16 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-
         {/* PUBLIC ROUTE */}
         <Route
           path="/"
           element={
             user ? (
-              user.role === "admin" ?
-                <Navigate to="/admin/dashboard" /> :
+              user.role === "admin" ? (
+                <Navigate to="/admin/dashboard" />
+              ) : (
                 <Navigate to="/employee/dashboard" />
+              )
             ) : (
               <Login handleLogin={handleLogin} />
             )
@@ -113,7 +117,6 @@ const App = () => {
             )
           }
         />
-
       </Routes>
     </BrowserRouter>
   );
