@@ -22,7 +22,7 @@ const App = () => {
       }
 
       try {
-        const res = await axiosInstance.get("/auth/me");
+        const res = await axiosInstance.get("/api/auth/me");
         setUser(res.data.user);
       } catch (err) {
         console.error("Auth check failed:", err);
@@ -38,7 +38,7 @@ const App = () => {
   // ✔ Login handler
   const handleLogin = async (email, password) => {
     try {
-      const res = await axiosInstance.post("/auth/login", { email, password });
+      const res = await axiosInstance.post("api/auth/login", { email, password });
 
       if (res.data.token) {
         localStorage.setItem("token", res.data.token);
