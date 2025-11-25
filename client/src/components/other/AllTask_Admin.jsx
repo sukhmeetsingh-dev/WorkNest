@@ -8,7 +8,7 @@ const AllTask_Admin = () => {
   const fetchTasks = async () => {
     try {
       setLoading(true);
-      const res = await axiosInstance.get("/tasks");
+      const res = await axiosInstance.get("/api/tasks");
       setTasks(res.data.tasks || []);
     } catch (err) {
       console.error("Error fetching tasks:", err);

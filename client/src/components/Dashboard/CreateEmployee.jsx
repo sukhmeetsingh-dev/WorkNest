@@ -20,7 +20,7 @@ const CreateEmployee = ({ user, onLogout }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axiosInstance.post("/auth/register", form);
+      await axiosInstance.post("/api/auth/create-employee", form);
       alert("Employee created successfully");
       navigate("/admin/dashboard");
     } catch (error) {
