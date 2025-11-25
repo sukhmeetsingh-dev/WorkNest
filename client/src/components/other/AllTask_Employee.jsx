@@ -19,7 +19,7 @@ const AllTask_Employee = () => {
 
   const updateStatus = async (id, status) => {
     try {
-      await axiosInstance.put(`/tasks/${id}`, { status });
+      await axiosInstance.put(`/api/tasks/${id}`, { status });
       fetchTasks();
     } catch (err) {
       console.error("Error updating status:", err);
