@@ -28,7 +28,7 @@ const CreateTask = () => {
     e.preventDefault();
 
     try {
-      await axiosInstance.post("/tasks", form);
+      await axiosInstance.post("/api/tasks", form);
 
       alert("Task created successfully!");
 
