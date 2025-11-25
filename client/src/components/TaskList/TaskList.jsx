@@ -17,7 +17,7 @@ const TaskList = ({ filter = "all" }) => {
   const fetchTasks = async () => {
     try {
       setLoading(true);
-      const res = await axiosInstance.get("/tasks/my-tasks");
+      const res = await axiosInstance.get("/api/tasks/my-tasks");
       const myTasks = res.data.tasks || [];
       setTasks(myTasks);
 
