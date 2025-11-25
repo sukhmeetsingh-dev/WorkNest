@@ -14,7 +14,8 @@ const CreateTask = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const res = await axiosInstance.get("/auth/employees");
+        const res = await axiosInstance.get("/api/auth/employees");
+        console.log("EMPLOYEES RESPONSE:", res.data);
         setEmployees(res.data);
       } catch (err) {
         console.error("Error fetching employees:", err);
