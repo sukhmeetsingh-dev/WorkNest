@@ -6,7 +6,7 @@ const AllTask_Employee = () => {
 
   const fetchTasks = async () => {
     try {
-      const res = await axiosInstance.get("/tasks/my-tasks");
+      const res = await axiosInstance.get("api/tasks/my-tasks");
       setTasks(res.data.tasks || []);
     } catch (err) {
       console.error("Error fetching tasks:", err);
