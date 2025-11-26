@@ -3,10 +3,29 @@ import { useNavigate } from "react-router-dom";
 import Header from "../other/Header";
 import CreateTask from "../other/CreateTask"
 import AllTask_Admin from "../other/AllTask_Admin";
-import TaskListNumber from "../other/TaskListNumbers"
+import TaskListNumber from "../other/TaskListNumbers";
+import axiosInstance from "../../utils/axiosInstance";
 
 const AdminDashboard = ({ user, onLogout }) => {
   const navigate = useNavigate();
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch all tasks once (admin route)
+  const fetchTasks = async () => {
+    try {
+      const res = await axiosInstance.get("/api/tasks");
+      setTasks(res.data.tasks || []);
+    } catch (err) {
+      console.error("Admin failed to fetch tasks:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTasks();
+  }, []);
 
   return (
     <div className="min-h-screen bg-white text-black">
@@ -26,9 +45,9 @@ const AdminDashboard = ({ user, onLogout }) => {
           </button>
         </div>
 
-        <TaskListNumber />
-        <CreateTask />
-        <AllTask_Admin />
+        <TaskListNumber tasks={tasks} />
+        <CreateTask refreshTasks={fetchTasks} />
+        <AllTask_Admin tasks={tasks} refreshTasks={fetchTasks} loading={loading} />
       </div>
     </div>
   );

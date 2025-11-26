@@ -1,26 +1,6 @@
-import React, { useEffect, useState } from "react";
-import axiosInstance from "../../utils/axiosInstance";
+import React from "react";
 
-const AllTask_Admin = () => {
-  const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  const fetchTasks = async () => {
-    try {
-      setLoading(true);
-      const res = await axiosInstance.get("/api/tasks");
-      setTasks(res.data.tasks || []);
-    } catch (err) {
-      console.error("Error fetching tasks:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchTasks();
-  }, []);
-
+const AllTask_Admin = ({ tasks = [], refreshTasks, loading }) => {
   // Format date to DD/MM/YYYY
   const formatDate = (dateStr) => {
     if (!dateStr) return "—";
@@ -34,7 +14,7 @@ const AllTask_Admin = () => {
         <h3 className="text-xl font-semibold text-blue-700">All Tasks</h3>
 
         <button
-          onClick={fetchTasks}
+          onClick={refreshTasks}
           disabled={loading}
           className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded transition"
         >
@@ -42,7 +22,7 @@ const AllTask_Admin = () => {
         </button>
       </div>
 
-      {/* TABLE */}
+      {/* TASK TABLE */}
       <div className="overflow-x-auto">
         <table className="w-full border-collapse border border-gray-400">
           <thead>
@@ -58,17 +38,31 @@ const AllTask_Admin = () => {
             {tasks.map((task) => (
               <tr key={task._id}>
                 <td className="border border-gray-400 p-2">{task.title}</td>
+
                 <td className="border border-gray-400 p-2">
                   {task.assignedTo?.firstName || "Unassigned"}
                 </td>
+
                 <td className="border border-gray-400 p-2">
                   {formatDate(task.dueDate)}
                 </td>
+
                 <td className="border border-gray-400 p-2 capitalize">
                   {task.status}
                 </td>
               </tr>
             ))}
+
+            {tasks.length === 0 && (
+              <tr>
+                <td
+                  colSpan="4"
+                  className="text-center p-4 text-gray-500 italic"
+                >
+                  No tasks found.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
