@@ -36,7 +36,7 @@ const CreateTask = () => {
         title: "",
         description: "",
         assignedTo: "",
-        dueDate: "", 
+        dueDate: "",
       });
     } catch (err) {
       console.error(err);
@@ -49,7 +49,6 @@ const CreateTask = () => {
       <h3 className="text-xl font-semibold mb-4 text-blue-700">Create Task</h3>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-
         {/* Title */}
         <input
           type="text"

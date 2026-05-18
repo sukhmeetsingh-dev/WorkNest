@@ -30,7 +30,7 @@ const AllTask_Employee = () => {
     const messages = {
       working: "Start working on this task?",
       completed: "Mark this task as completed?",
-      failed: "Mark this task as failed?"
+      failed: "Mark this task as failed?",
     };
 
     if (window.confirm(messages[action])) {
@@ -77,7 +77,9 @@ const AllTask_Employee = () => {
                   {/* Working Button */}
                   <button
                     onClick={() => confirmAction(task._id, "working")}
-                    disabled={task.status === "working" || task.status === "completed"}
+                    disabled={
+                      task.status === "working" || task.status === "completed"
+                    }
                     className={`px-3 py-1 rounded text-white ${
                       task.status === "working" || task.status === "completed"
                         ? "bg-gray-400 cursor-not-allowed"
