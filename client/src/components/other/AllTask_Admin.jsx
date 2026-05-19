@@ -37,7 +37,7 @@ const AllTask_Admin = ({
         status: newStatus,
         employee: newEmployee,
       },
-      1
+      1,
     );
   };
 
@@ -65,7 +65,7 @@ const AllTask_Admin = ({
         status: statusFilter,
         employee: employeeFilter,
       },
-      page
+      page,
     );
   };
 
