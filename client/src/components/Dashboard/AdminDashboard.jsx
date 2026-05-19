@@ -7,6 +7,7 @@ import AllTask_Admin from "../other/AllTask_Admin";
 import TaskListNumber from "../other/TaskListNumbers";
 import axiosInstance from "../../utils/axiosInstance";
 import ActivityFeed from "../other/ActivityFeed";
+import EmployeeManagement from "../other/EmployeeManagement";
 
 const AdminDashboard = ({ user, onLogout }) => {
   const navigate = useNavigate();
@@ -68,6 +69,7 @@ const AdminDashboard = ({ user, onLogout }) => {
 
         <TaskListNumber tasks={tasks} />
         <ActivityFeed />
+        <EmployeeManagement />
         <CreateTask refreshTasks={fetchTasks} />
         <AllTask_Admin
           tasks={tasks}

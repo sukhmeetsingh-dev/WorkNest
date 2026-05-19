@@ -173,3 +173,34 @@ export const updateTaskStatus = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+//Delete Task
+
+export const deleteTask = async (req, res) => {
+  try {
+    const task = await Task.findById(req.params.id).populate(
+      "assignedTo",
+      "firstName"
+    );
+
+    if (!task) {
+      return res.status(404).json({ msg: "Task not found" });
+    }
+
+    await ActivityLog.create({
+      user: req.user._id,
+      action: "task_deleted",
+      targetType: "task",
+      targetId: task._id,
+      details: `Deleted task "${task.title}" assigned to ${task.assignedTo?.firstName || "Unknown User"}`,
+    });
+
+    await task.deleteOne();
+
+    res.json({
+      msg: "Task deleted successfully",
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

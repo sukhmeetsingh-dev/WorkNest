@@ -5,6 +5,7 @@ import {
   createEmployee,
   getCurrentUser,
   getAllEmployees,
+  deleteEmployee,
 } from "../controllers/authController.js";
 import { protect, adminOnly } from "../middleware/auth.js";
 
@@ -17,5 +18,6 @@ router.get("/me", protect, getCurrentUser);
 
 // NEW ROUTE: Get all employees (admin only)
 router.get("/employees", protect, adminOnly, getAllEmployees);
+router.delete("/employees/:id", protect, adminOnly, deleteEmployee);
 
 export default router;

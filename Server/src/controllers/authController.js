@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.js";
+import Task from "../models/task.js";
 import bcrypt from "bcryptjs";
 
 const generateToken = (id) => {
@@ -9,7 +10,7 @@ const generateToken = (id) => {
 // Register user (Admin)
 export const registerUser = async (req, res) => {
   try {
-    console.log("Incoming data:", req.body); 
+    console.log("Incoming data:", req.body);
     const { firstName, email, password, role } = req.body;
 
     if (!firstName || !email || !password) {
@@ -24,7 +25,7 @@ export const registerUser = async (req, res) => {
     const user = new User({
       firstName,
       email,
-      password,  // plain password; will be hashed by pre-save hook
+      password, // plain password; will be hashed by pre-save hook
       role: role || "employee",
     });
     await user.save();
@@ -43,7 +44,6 @@ export const registerUser = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
 
 // Admin creates employee
 export const createEmployee = async (req, res) => {
@@ -75,7 +75,7 @@ export const createEmployee = async (req, res) => {
 export const getAllEmployees = async (req, res) => {
   try {
     const employees = await User.find({ role: "employee" }).select(
-      "firstName email _id"
+      "firstName email _id",
     );
     res.json(employees);
   } catch (err) {
@@ -110,4 +110,38 @@ export const loginUser = async (req, res) => {
 // Get current user
 export const getCurrentUser = async (req, res) => {
   res.json({ user: req.user });
+};
+
+//Delete Employee
+
+export const deleteEmployee = async (req, res) => {
+  try {
+    const employee = await User.findById(req.params.id);
+
+    if (!employee) {
+      return res.status(404).json({ msg: "Employee not found" });
+    }
+
+    if (employee.role !== "employee") {
+      return res.status(400).json({ msg: "Only employees can be deleted" });
+    }
+
+    const assignedTasks = await Task.countDocuments({
+      assignedTo: employee._id,
+    });
+
+    if (assignedTasks > 0) {
+      return res.status(400).json({
+        msg: "Cannot delete employee with assigned tasks. Reassign or delete tasks first.",
+      });
+    }
+
+    await employee.deleteOne();
+
+    res.json({
+      msg: "Employee deleted successfully",
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };

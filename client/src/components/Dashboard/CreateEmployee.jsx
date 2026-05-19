@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import Header from "../other/Header";
 import axiosInstance from "../../utils/axiosInstance"; 
 import { useNavigate } from "react-router-dom";
@@ -21,10 +22,10 @@ const CreateEmployee = ({ user, onLogout }) => {
     e.preventDefault();
     try {
       await axiosInstance.post("/api/auth/create-employee", form);
-      alert("Employee created successfully");
+      toast.success("Employee created successfully");
       navigate("/admin/dashboard");
     } catch (error) {
-      alert(error.response?.data?.message || "Something went wrong");
+      toast.error(error.response?.data?.msg || "Something went wrong");
     }
   };
 
