@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../../utils/axiosInstance";
+import CustomModal from "./CustomModal";
+import toast from "react-hot-toast";
 
 const AllTask_Admin = ({
   tasks = [],
@@ -26,6 +28,45 @@ const AllTask_Admin = ({
     if (!dateStr) return "—";
     const d = new Date(dateStr);
     return d.toLocaleDateString("en-GB");
+  };
+
+  const getDeadlineStatus = (dueDate) => {
+    if (!dueDate) return null;
+
+    const today = new Date();
+    const due = new Date(dueDate);
+
+    today.setHours(0, 0, 0, 0);
+    due.setHours(0, 0, 0, 0);
+
+    const diffTime = due - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays < 0) {
+      return {
+        label: "Overdue",
+        className: "bg-red-100 text-red-700",
+      };
+    }
+
+    if (diffDays === 0) {
+      return {
+        label: "Due Today",
+        className: "bg-yellow-100 text-yellow-700",
+      };
+    }
+
+    if (diffDays <= 2) {
+      return {
+        label: "Due Soon",
+        className: "bg-orange-100 text-orange-700",
+      };
+    }
+
+    return {
+      label: "On Track",
+      className: "bg-green-100 text-green-700",
+    };
   };
 
   useEffect(() => {
@@ -82,6 +123,7 @@ const AllTask_Admin = ({
   const handleUpdateTask = async () => {
     try {
       await axiosInstance.put(`/api/tasks/${editingTask._id}`, editForm);
+      toast.success("Task updated successfully");
 
       setEditingTask(null);
 
@@ -94,13 +136,15 @@ const AllTask_Admin = ({
       );
     } catch (err) {
       console.error("Failed to update task:", err);
-      alert("Failed to update task");
+      toast.error("Failed to update task");
     }
   };
 
   const handleDeleteTask = async (taskId) => {
     try {
       await axiosInstance.delete(`/api/tasks/${taskId}`);
+      toast.success("Task deleted successfully");
+      setTaskToDelete(null);
 
       refreshTasks(
         {
@@ -111,7 +155,7 @@ const AllTask_Admin = ({
       );
     } catch (err) {
       console.error("Failed to delete task:", err);
-      alert("Failed to delete task");
+      toast.error("Failed to delete task");
     }
   };
 
@@ -188,7 +232,17 @@ const AllTask_Admin = ({
                 </td>
 
                 <td className="border border-gray-400 p-2">
-                  {formatDate(task.dueDate)}
+                  <div className="flex flex-col gap-1">
+                    <span>{formatDate(task.dueDate)}</span>
+
+                    {getDeadlineStatus(task.dueDate) && (
+                      <span
+                        className={`text-xs font-medium px-2 py-1 rounded-full w-fit ${getDeadlineStatus(task.dueDate).className}`}
+                      >
+                        {getDeadlineStatus(task.dueDate).label}
+                      </span>
+                    )}
+                  </div>
                 </td>
 
                 <td className="border border-gray-400 p-2 capitalize">
@@ -274,119 +328,86 @@ const AllTask_Admin = ({
       )}
 
       {/* Edit Task*/}
-      {editingTask && (
-        <div className="fixed inset-0 bg-white/10 backdrop-blur-md flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-xl shadow-xl w-full max-w-lg">
-            <h3 className="text-xl font-semibold text-blue-700 mb-4">
-              Edit Task
-            </h3>
+      <CustomModal
+        isOpen={!!editingTask}
+        title="Edit Task"
+        onClose={() => setEditingTask(null)}
+        onConfirm={handleUpdateTask}
+        confirmText="Save Changes"
+        confirmButtonClass="bg-blue-600 hover:bg-blue-700"
+        maxWidth="max-w-lg"
+      >
+        <div className="space-y-4">
+          <input
+            type="text"
+            value={editForm.title}
+            onChange={(e) =>
+              setEditForm({ ...editForm, title: e.target.value })
+            }
+            className="w-full border p-3 rounded-lg"
+            placeholder="Task Title"
+          />
 
-            <div className="space-y-4">
-              <input
-                type="text"
-                value={editForm.title}
-                onChange={(e) =>
-                  setEditForm({ ...editForm, title: e.target.value })
-                }
-                className="w-full border p-3 rounded-lg"
-                placeholder="Task Title"
-              />
+          <textarea
+            value={editForm.description}
+            onChange={(e) =>
+              setEditForm({ ...editForm, description: e.target.value })
+            }
+            className="w-full border p-3 rounded-lg"
+            placeholder="Description"
+          />
 
-              <textarea
-                value={editForm.description}
-                onChange={(e) =>
-                  setEditForm({ ...editForm, description: e.target.value })
-                }
-                className="w-full border p-3 rounded-lg"
-                placeholder="Description"
-              />
+          <select
+            value={editForm.assignedTo}
+            onChange={(e) =>
+              setEditForm({ ...editForm, assignedTo: e.target.value })
+            }
+            className="w-full border p-3 rounded-lg"
+          >
+            {employees.map((emp) => (
+              <option key={emp._id} value={emp._id}>
+                {emp.firstName}
+              </option>
+            ))}
+          </select>
 
-              <select
-                value={editForm.assignedTo}
-                onChange={(e) =>
-                  setEditForm({ ...editForm, assignedTo: e.target.value })
-                }
-                className="w-full border p-3 rounded-lg"
-              >
-                {employees.map((emp) => (
-                  <option key={emp._id} value={emp._id}>
-                    {emp.firstName}
-                  </option>
-                ))}
-              </select>
+          <input
+            type="date"
+            value={editForm.dueDate}
+            onChange={(e) =>
+              setEditForm({ ...editForm, dueDate: e.target.value })
+            }
+            className="w-full border p-3 rounded-lg"
+          />
 
-              <input
-                type="date"
-                value={editForm.dueDate}
-                onChange={(e) =>
-                  setEditForm({ ...editForm, dueDate: e.target.value })
-                }
-                className="w-full border p-3 rounded-lg"
-              />
-
-              <select
-                value={editForm.status}
-                onChange={(e) =>
-                  setEditForm({ ...editForm, status: e.target.value })
-                }
-                className="w-full border p-3 rounded-lg"
-              >
-                <option value="pending">Pending</option>
-                <option value="working">Working</option>
-                <option value="completed">Completed</option>
-                <option value="failed">Failed</option>
-              </select>
-
-              <div className="flex justify-end gap-3">
-                <button
-                  onClick={() => setEditingTask(null)}
-                  className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded"
-                >
-                  Cancel
-                </button>
-
-                <button
-                  onClick={handleUpdateTask}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
-                >
-                  Save Changes
-                </button>
-              </div>
-            </div>
-          </div>
+          <select
+            value={editForm.status}
+            onChange={(e) =>
+              setEditForm({ ...editForm, status: e.target.value })
+            }
+            className="w-full border p-3 rounded-lg"
+          >
+            <option value="pending">Pending</option>
+            <option value="working">Working</option>
+            <option value="completed">Completed</option>
+            <option value="failed">Failed</option>
+          </select>
         </div>
-      )}
+      </CustomModal>
 
-      {taskToDelete && (
-        <div className="fixed inset-0 bg-white/10 backdrop-blur-md flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md">
-            <h3 className="text-xl font-semibold text-red-600 mb-3">
-              Confirm Task Deletion
-            </h3>
-
-            <p className="text-gray-700 mb-6">
-              Are you sure you want to delete task:
-              <span className="font-semibold"> {taskToDelete.title}</span> ?
-            </p>
-
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() => setTaskToDelete(null)}
-                className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded"
-              >
-                Cancel
-              </button>
-
-              <button
-                onClick={() => handleDeleteTask(taskToDelete._id)}
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <CustomModal
+        isOpen={!!taskToDelete}
+        title="Confirm Task Deletion"
+        onClose={() => setTaskToDelete(null)}
+        onConfirm={() => handleDeleteTask(taskToDelete._id)}
+        confirmText="Delete"
+        confirmButtonClass="bg-red-600 hover:bg-red-700"
+      >
+        <p className="text-gray-700">
+          Are you sure you want to delete task
+          <span className="font-semibold"> {taskToDelete?.title}</span> ?
+        </p>
+      </CustomModal>
     </div>
   );
 };

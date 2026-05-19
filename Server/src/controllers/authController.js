@@ -145,3 +145,55 @@ export const deleteEmployee = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+//Update Employee
+
+export const updateEmployee = async (req, res) => {
+  try {
+    const { firstName, email, password } = req.body;
+
+    const employee = await User.findById(req.params.id);
+
+    if (!employee) {
+      return res.status(404).json({ msg: "Employee not found" });
+    }
+
+    if (employee.role !== "employee") {
+      return res.status(400).json({ msg: "Only employees can be updated" });
+    }
+
+    if (email) {
+      const existingUser = await User.findOne({
+        email,
+        _id: { $ne: employee._id },
+      });
+
+      if (existingUser) {
+        return res.status(400).json({ msg: "Email already in use" });
+      }
+
+      employee.email = email;
+    }
+
+    if (firstName) {
+      employee.firstName = firstName;
+    }
+
+    if (password && password.trim() !== "") {
+      employee.password = password;
+    }
+
+    await employee.save();
+
+    res.json({
+      msg: "Employee updated successfully",
+      employee: {
+        _id: employee._id,
+        firstName: employee.firstName,
+        email: employee.email,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

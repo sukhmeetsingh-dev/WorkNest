@@ -1,5 +1,4 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../other/Header";
 import CreateTask from "../other/CreateTask";
@@ -11,43 +10,73 @@ import EmployeeManagement from "../other/EmployeeManagement";
 
 const AdminDashboard = ({ user, onLogout }) => {
   const navigate = useNavigate();
+
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [activeFilters, setActiveFilters] = useState({});
 
-  // Fetch all tasks once (admin route)
- const fetchTasks = async (filters = {}, page = 1) => {
-  try {
-    setLoading(true);
+  const [sections, setSections] = useState({
+    activity: true,
+    employees: true,
+    createTask: true,
+    tasks: true,
+  });
 
-    const mergedFilters = {
-      ...activeFilters,
-      ...filters,
-      page,
-      limit: 10,
-    };
+  const toggleSection = (section) => {
+    setSections((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
 
-    setActiveFilters(mergedFilters);
+  const fetchTasks = async (filters = {}, page = 1) => {
+    try {
+      setLoading(true);
 
-    const query = new URLSearchParams(mergedFilters).toString();
+      const mergedFilters = {
+        ...activeFilters,
+        ...filters,
+        page,
+        limit: 10,
+      };
 
-    const res = await axiosInstance.get(`/api/tasks?${query}`);
+      setActiveFilters(mergedFilters);
 
-    setTasks(res.data.tasks || []);
-    setCurrentPage(res.data.currentPage || 1);
-    setTotalPages(res.data.totalPages || 1);
-  } catch (err) {
-    console.error("Admin failed to fetch tasks:", err);
-  } finally {
-    setLoading(false);
-  }
-};
+      const query = new URLSearchParams(mergedFilters).toString();
+
+      const res = await axiosInstance.get(`/api/tasks?${query}`);
+
+      setTasks(res.data.tasks || []);
+      setCurrentPage(res.data.currentPage || 1);
+      setTotalPages(res.data.totalPages || 1);
+    } catch (err) {
+      console.error("Admin failed to fetch tasks:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     fetchTasks();
   }, []);
+
+  const SectionWrapper = ({ title, sectionKey, children }) => (
+    <div className="bg-gray-100 rounded-xl shadow-md">
+      <button
+        onClick={() => toggleSection(sectionKey)}
+        className="w-full flex justify-between items-center px-6 py-4 text-left"
+      >
+        <h3 className="text-xl font-semibold text-blue-700">{title}</h3>
+        <span className="text-xl font-bold text-blue-700">
+          {sections[sectionKey] ? "▼" : "▸"}
+        </span>
+      </button>
+
+      {sections[sectionKey] && <div className="px-6 pb-6">{children}</div>}
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-white text-black">
@@ -68,9 +97,17 @@ const AdminDashboard = ({ user, onLogout }) => {
         </div>
 
         <TaskListNumber tasks={tasks} />
-        <ActivityFeed />
-        <EmployeeManagement />
+
+        <SectionWrapper title="Recent Activity" sectionKey="activity">
+          <ActivityFeed />
+        </SectionWrapper>
+
+        <SectionWrapper title="Employee Management" sectionKey="employees">
+          <EmployeeManagement />
+        </SectionWrapper>
+
         <CreateTask refreshTasks={fetchTasks} />
+
         <AllTask_Admin
           tasks={tasks}
           refreshTasks={fetchTasks}

@@ -30,10 +30,7 @@ const ActivityFeed = () => {
   };
 
   return (
-    <div className="bg-white border rounded-2xl shadow-md p-6">
-      <h3 className="text-xl font-semibold text-blue-700 mb-4">
-        Recent Activity
-      </h3>
+    <div className="p-2">
 
       {loading ? (
         <p className="text-gray-500">Loading activity...</p>

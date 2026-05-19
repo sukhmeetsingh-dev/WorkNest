@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import axiosInstance from "../../utils/axiosInstance";
 
 const CreateTask = () => {
@@ -30,7 +31,7 @@ const CreateTask = () => {
     try {
       await axiosInstance.post("/api/tasks", form);
 
-      alert("Task created successfully!");
+      toast.success("Task created successfully");
 
       setForm({
         title: "",
@@ -40,7 +41,7 @@ const CreateTask = () => {
       });
     } catch (err) {
       console.error(err);
-      alert("Failed to create task");
+      toast.error("Failed to create task");
     }
   };
 
